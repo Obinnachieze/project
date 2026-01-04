@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="converter-card">
+        <h1>Currency Converter</h1>
+
+        <div class="input-section">
+          <label>Amount</label>
+          <input
+            type="number"
+            id="amount"
+            value="1"
+            placeholder="Enter amount"
+          />
+        </div>
+
+        <div class="selection-row">
+          <div class="select-group">
+            <label>From</label>
+            <select id="from-currency" title="Select currency to convert from">
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="NGN">NGN</option>
+            </select>
+          </div>
+
+          <button id="swap-btn" title="Swap Currencies">
+            <div class="swap-icon"></div>
+          </button>
+
+          <div class="select-group">
+            <label>To</label>
+            <select id="to-currency" title="Select currency to convert to">
+              <option value="NGN">NGN</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="result-box">
+          <p id="rate-info">Exchange Rate Info</p>
+          <div id="converted-amount">2.500</div>
+        </div>
+
+        <footer class="footer-text">Rates updated daily via Frankfurter</footer>
+      </div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
