@@ -5,8 +5,7 @@
   "description": "A modern currency converter with integrated job-saving tools.",
   "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": [
-    "https://api.frankfurter.dev/v1/*",
-    "https://www.linkedin.com/jobs/view/*"
+    "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/*"
   ],
   "action": {
     "default_popup": "index.html",
