@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Global Currency & Job Tracker",
+  "name": "Global Currency",
   "version": "1.0",
   "description": "A modern currency converter with integrated job-saving tools.",
   "permissions": ["storage", "activeTab", "scripting"],
