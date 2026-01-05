@@ -71,8 +71,8 @@ select {
 
 /* The round gradient swap button */
 #swap-btn {
-  width: 55px;
-  height: 55px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   background: linear-gradient(45deg, #84fab0 0%, #8fd3f4 100%);

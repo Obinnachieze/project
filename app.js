@@ -6,48 +6,60 @@ const swapBtn = document.getElementById("swap-btn");
 const rateInfo = document.getElementById("rate-info");
 const resultDisplay = document.getElementById("converted-amount");
 
-// 2. Main function to fetch data and update UI
+// 2. Map currency codes to their symbols
+const currencySymbols = {
+  USD: "$",
+  EUR: "€",
+  GBP: "£",
+  NGN: "₦",
+  JPY: "¥",
+  CAD: "$",
+  AUD: "$",
+};
+
+// 3. Main function to fetch data and update UI
 async function convertCurrency() {
   const amount = amountInput.value;
 
-  // The Fawaz Ahmed API requires lowercase currency codes (usd, ngn)
-  const from = fromSelect.value.toLowerCase();
-  const to = toSelect.value.toLowerCase();
+  // Get values from dropdowns (Use uppercase for labels/symbols, lowercase for API)
+  const fromCode = fromSelect.value.toUpperCase();
+  const toCode = toSelect.value.toUpperCase();
+  const from = fromCode.toLowerCase();
+  const to = toCode.toLowerCase();
 
-  // Prevent empty inputs or zeros
   if (amount === "" || amount <= 0) {
     resultDisplay.innerText = "0.00";
     return;
   }
 
   try {
-    // Updated API URL (v1 is more stable for this provider)
     const url = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${from}.json`;
 
     const response = await fetch(url);
-
     if (!response.ok) throw new Error("Network response was not ok");
 
     const data = await response.json();
 
-    // LOGIC FIX: The API structure is data[from][to]
-    // Example: data["usd"]["ngn"]
+    // API logic: data[from][to]
     const rate = data[from][to];
     const convertedValue = amount * rate;
 
-    // 3. Update the Display
-    // Use toLocaleString for pretty commas (e.g., 1,500.00)
-    resultDisplay.innerText = `${convertedValue.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })} ${to.toUpperCase()}`;
+    // 4. Update the Display Dynamically
+    const symbol = currencySymbols[toCode] || ""; // Get symbol (¥, ₦, etc.)
 
-    // Show the individual exchange rate below the main result
-    rateInfo.innerText = `1 ${from.toUpperCase()} = ${rate.toFixed(
-      4
-    )} ${to.toUpperCase()}`;
+    // Show: Symbol + Formatted Number + Code (e.g., ¥ 150.00 JPY)
+    resultDisplay.innerText = `${symbol} ${convertedValue.toLocaleString(
+      undefined,
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }
+    )} ${toCode}`;
 
-    // 4. Save preferences to Chrome Storage (if running as extension)
+    // Update the smaller rate text (e.g., 1 USD = 150.00 JPY)
+    rateInfo.innerText = `1 ${fromCode} = ${rate.toFixed(4)} ${toCode}`;
+
+    // 5. Save preferences to Chrome Storage
     if (typeof chrome !== "undefined" && chrome.storage) {
       chrome.storage.local.set({
         from: fromSelect.value,
@@ -62,7 +74,7 @@ async function convertCurrency() {
   }
 }
 
-// 5. Swap Button Logic
+// 6. Swap Button Logic
 swapBtn.addEventListener("click", () => {
   const temp = fromSelect.value;
   fromSelect.value = toSelect.value;
@@ -70,12 +82,12 @@ swapBtn.addEventListener("click", () => {
   convertCurrency();
 });
 
-// 6. Automatic Listeners (Real-time updates)
+// 7. Automatic Listeners
 amountInput.addEventListener("input", convertCurrency);
 fromSelect.addEventListener("change", convertCurrency);
 toSelect.addEventListener("change", convertCurrency);
 
-// 7. Initial Load: Retrieve saved settings from Chrome Storage
+// 8. Initial Load
 if (typeof chrome !== "undefined" && chrome.storage) {
   chrome.storage.local.get(["from", "to", "amount"], (data) => {
     if (data.from) fromSelect.value = data.from;
@@ -84,6 +96,5 @@ if (typeof chrome !== "undefined" && chrome.storage) {
     convertCurrency();
   });
 } else {
-  // Run once on load if storage isn't available
   convertCurrency();
 }
